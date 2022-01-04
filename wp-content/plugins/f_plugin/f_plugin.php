@@ -95,6 +95,29 @@ class WordCountAndTimePlugin{
 
     function headlineHTML(){ ?>
         <input type="text" name="wcp_headline" value="<?php echo esc_attr(get_option('wcp_headline'))?>">
+        
+            <?php
+            $args = array(
+                'post_type'      => 'wporg_ccgidey',
+                'posts_per_page' => 10,
+            );
+
+            $loop = new WP_Query($args);
+            while ( $loop->have_posts() ) {
+                $loop->the_post();
+                ?>
+                <div class="entry-content">
+                    <?php the_title(); ?>
+                    <?php the_content(); ?>
+                </div>
+                <?php
+            }
+                ?>
+                <div class="entry-content">
+                    WTF
+                </div>
+                <?php
+            ?>
     <?php }
 
     function wordcountHTML(){ ?>
@@ -125,5 +148,18 @@ class WordCountAndTimePlugin{
         <?php }
 }
 
-$wordCountAndTimePlugin = new WordCountAndTimePlugin();
+function wporg_custom_post_type() {
+    register_post_type('wporg_ccgidey',
+        array(
+            'labels'      => array(
+                'name'          => __('Quaos', 'textdomain'),
+                'singular_name' => __('Quao', 'textdomain'),
+            ),
+                'public'      => true,
+                'has_archive' => true,
+        )
+    );
+}
+add_action('init', 'wporg_custom_post_type');
 
+$wordCountAndTimePlugin = new WordCountAndTimePlugin();
